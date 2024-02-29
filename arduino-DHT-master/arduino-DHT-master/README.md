@@ -1,3 +1,5 @@
+
+```c
 #include <stdio.h>
 #include <unistd.h> // For sleep function
 #include "DHT.h"
@@ -42,3 +44,4 @@ void loop() {
     // Print sensor data
     printf("%.2f\t%.2f\n", humidity, temperature);
 }
+```
