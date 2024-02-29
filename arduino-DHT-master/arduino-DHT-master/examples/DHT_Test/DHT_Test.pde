@@ -1,29 +1,21 @@
+#include <stdio.h>
 #include "DHT.h"
 
 DHT dht;
 
 void setup()
 {
-  Serial.begin(9600);
-  Serial.println();
-  Serial.println("Status\tHumidity (%)\tTemperature (C)\t(F)");
+  printf("\nStatus\tHumidity (%)\tTemperature (C)\t(F)\n");
 
-  dht.setup(2); // data pin 2
+  dht_setup(2); // data pin 2
 }
 
 void loop()
 {
-  delay(dht.getMinimumSamplingPeriod());
+  delay(dht_getMinimumSamplingPeriod());
 
-  float humidity = dht.getHumidity();
-  float temperature = dht.getTemperature();
+  float humidity = dht_getHumidity();
+  float temperature = dht_getTemperature();
 
-  Serial.print(dht.getStatusString());
-  Serial.print("\t");
-  Serial.print(humidity, 1);
-  Serial.print("\t\t");
-  Serial.print(temperature, 1);
-  Serial.print("\t\t");
-  Serial.println(dht.toFahrenheit(temperature), 1);
+  printf("%s\t%.1f\t\t%.1f\t\t%.1f\n", dht_getStatusString(), humidity, temperature, dht_toFahrenheit(temperature));
 }
-
