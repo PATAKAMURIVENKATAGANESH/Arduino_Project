@@ -1,43 +1,44 @@
-
-Features
---------
-  - Support for DHT11 and DHT22, AM2302, RHT03
-  - Auto detect sensor model
-  - Low memory footprint
-  - Very small code
-
-Usage
------
-
-```
+#include <stdio.h>
+#include <unistd.h> // For sleep function
 #include "DHT.h"
 
 DHT dht;
 
-void setup()
-{
-  Serial.begin(9600);
-
-  dht.setup(2); // data pin 2
+void dht_setup(int pin) {
+    // Initialize DHT sensor
+    dht.pin = pin;
+    // Add any additional setup code here if needed
 }
 
-void loop()
-{
-  delay(dht.getMinimumSamplingPeriod());
-
-  Serial.print(dht.getHumidity());
-  Serial.print("\t");
-  Serial.print(dht.getTemperature());
+unsigned long dht_getMinimumSamplingPeriod() {
+    // Return the minimum sampling period
+    return 3000; // Assuming a minimum sampling period of 3 seconds
 }
-```
-Also check out the [example] how to read out your sensor. For all the options, see [dht.h][header].
 
-Installation
-------------
+float dht_getHumidity() {
+    // Read humidity from sensor
+    return 45.5; // Replace with actual humidity reading
+}
 
-Place the [DHT][download] library folder in your `<arduinosketchfolder>/libraries/` folder. You may need to create the `libraries` subfolder if its your first library. Restart the Arduino IDE. 
+float dht_getTemperature() {
+    // Read temperature from sensor
+    return 25.0; // Replace with actual temperature reading
+}
 
-[download]: https://github.com/markruys/arduino-DHT/archive/master.zip "Download DHT library"
-[example]: https://github.com/markruys/arduino-DHT/blob/master/examples/DHT_Test/DHT_Test.pde "Show DHT example"
-[header]: https://github.com/markruys/arduino-DHT/blob/master/DHT.h "Show header file"
+void setup() {
+    // Serial.begin(9600); // Serial communication not supported in C
+    dht_setup(2); // data pin 2
+}
 
+void loop() {
+    // Delay for the minimum sampling period
+    unsigned long delay_time = dht_getMinimumSamplingPeriod();
+    usleep(delay_time * 1000); // Convert milliseconds to microseconds
+
+    // Read sensor data
+    float humidity = dht_getHumidity();
+    float temperature = dht_getTemperature();
+
+    // Print sensor data
+    printf("%.2f\t%.2f\n", humidity, temperature);
+}
