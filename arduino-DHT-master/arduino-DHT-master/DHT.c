@@ -7,9 +7,9 @@
   - Very low memory footprint
   - Very small code
 
-  http://www.github.com/markruys/arduino-DHT
+  reference : http://www.github.com/markruys/arduino-DHT
 
-  Written by Mark Ruys, mark@paracas.nl.
+
 
   BSD license, check license.txt for more information.
   All text above must be included in any redistribution.
@@ -28,35 +28,35 @@
 
 #include "DHT.h"
 
-void DHT::setup(uint8_t pin, DHT_MODEL_t model)
+void setup(uint8_t pin, DHT_MODEL_t model)
 {
-  DHT::pin = pin;
-  DHT::model = model;
-  DHT::resetTimer(); // Make sure we do read the sensor in the next readSensor()
+  pin = pin;
+  model = model;
+  resetTimer(); // Make sure we do read the sensor in the next readSensor()
 
   if ( model == AUTO_DETECT) {
-    DHT::model = DHT22;
+    model = DHT22;
     readSensor();
     if ( error == ERROR_TIMEOUT ) {
-      DHT::model = DHT11;
+      model = DHT11;
       // Warning: in case we auto detect a DHT11, you should wait at least 1000 msec
       // before your first read request. Otherwise you will get a time out error.
     }
   }
 }
 
-void DHT::resetTimer()
+void resetTimer()
 {
-  DHT::lastReadTime = millis() - 3000;
+  lastReadTime = millis() - 3000;
 }
 
-float DHT::getHumidity()
+float getHumidity()
 {
   readSensor();
   return humidity;
 }
 
-float DHT::getTemperature()
+float getTemperature()
 {
   readSensor();
   return temperature;
@@ -64,13 +64,13 @@ float DHT::getTemperature()
 
 #ifndef OPTIMIZE_SRAM_SIZE
 
-const char* DHT::getStatusString()
+const char* getStatusString()
 {
   switch ( error ) {
-    case DHT::ERROR_TIMEOUT:
+    case ERROR_TIMEOUT:
       return "TIMEOUT";
 
-    case DHT::ERROR_CHECKSUM:
+    case ERROR_CHECKSUM:
       return "CHECKSUM";
 
     default:
@@ -83,32 +83,22 @@ const char* DHT::getStatusString()
 // At the expense of 26 bytes of extra PROGMEM, we save 11 bytes of
 // SRAM by using the following method:
 
-prog_char P_OK[]       PROGMEM = "OK";
-prog_char P_TIMEOUT[]  PROGMEM = "TIMEOUT";
-prog_char P_CHECKSUM[] PROGMEM = "CHECKSUM";
-
-const char *DHT::getStatusString() {
-  prog_char *c;
+const char *getStatusString() {
   switch ( error ) {
-    case DHT::ERROR_CHECKSUM:
-      c = P_CHECKSUM; break;
+    case ERROR_CHECKSUM:
+      return "CHECKSUM";
 
-    case DHT::ERROR_TIMEOUT:
-      c = P_TIMEOUT; break;
+    case ERROR_TIMEOUT:
+      return "TIMEOUT";
 
     default:
-      c = P_OK; break;
+      return "OK";
   }
-
-  static char buffer[9];
-  strcpy_P(buffer, c);
-
-  return buffer;
 }
 
 #endif
 
-void DHT::readSensor()
+void readSensor()
 {
   // Make sure we don't poll the sensor too often
   // - Max sample rate DHT11 is 1 Hz   (duty cicle 1000 ms)
