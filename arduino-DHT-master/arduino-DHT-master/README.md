@@ -1,9 +1,3 @@
-DHT
-===
-
-An Arduino library for reading the DHT family of temperature and humidity sensors.
-
-Written by Mark Ruys, <mark@paracas.nl>.
 
 Features
 --------
